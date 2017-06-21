@@ -9,8 +9,14 @@ function resource (app, stack) {
     // show, update, delete
     app.route(['GET', 'PUT', 'DELETE'], path.join(prefix, route, '/:id'), handler)
 
+    if (opt.overwrite) {
+      app.route(opt.overwrite.method, opt.overwrite.route, opt.overwrite.handler)
+    }
+
     function handler (req, res, ctx) {
       if (stack && stack._middleware.length > 0) {
+        ctx.req = req
+        ctx.res = res
         stack.walk(ctx, function (err, data, next) {
           if (err) throw err
           dispatch(req, res, ctx)

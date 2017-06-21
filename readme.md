@@ -24,6 +24,7 @@ $ savior full-stack <your-app-name>
 ## TODO
 
 - [x] Finish `production` cycle
+- [ ] Pass req, and res to ctx in Resource file, to use those in middlewares
 - [ ] Make some examples
 - [ ] Add more tests
 - [x] Add ci through travis
