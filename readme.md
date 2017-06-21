@@ -27,6 +27,10 @@ $ savior full-stack <your-app-name>
 - [ ] Pass req, and res to ctx in Resource file, to use those in middlewares
 - [ ] Make some examples
 - [ ] Add more tests
+  - [ ] Full REST api tests
+  - [ ] Middleware tests for api
+  - [ ] Method and route overwrite test
+  - [ ] Client tests
 - [x] Add ci through travis
 
 ## How it works

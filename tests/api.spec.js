@@ -43,6 +43,37 @@ tape('/api/v1/post', function (t) {
     })
   })
 
+  t.test('PUT', function (assert) {
+    assert.plan(4)
+    var post = { title: 'Foo bar wow', content: 'lorem ipsum' }
+
+    makeRequest('POST', '/api/v1/post', post, function (body, res) {
+      post.title = 'New Foo Title'
+      assert.equal('Foo bar wow', body.data.title)
+      makeRequest('PUT', '/api/v1/post/' + body.data.id, post, function (body, res) {
+        assert.equal(res.statusCode, 200)
+        assert.equal('New Foo Title', body.data.title)
+        assert.equal('lorem ipsum', body.data.content)
+      })
+    })
+  })
+
+  t.test('DELETE', function (assert) {
+    assert.plan(3)
+    var post = { title: 'Foo bar wow', content: 'lorem ipsum' }
+
+    makeRequest('POST', '/api/v1/post', post, function (body, res) {
+      assert.equal(res.statusCode, 200)
+      var id = body.data.id
+      makeRequest('DELETE', '/api/v1/post/' + id, null, function (body, res) {
+        assert.equal(res.statusCode, 200)
+        makeRequest('GET', '/api/v1/post/' + id, null, function (body, res) {
+          assert.equal(res.statusCode, 404)
+        })
+      })
+    })
+  })
+
   function makeRequest (method, route, data, cb) {
     var req = http.request({ port: 8080, method: method, path: route, headers: {'Content-Type': 'application/json'} }, function (res) {
       res.on('error', function (err) {
@@ -52,7 +83,9 @@ tape('/api/v1/post', function (t) {
       res.on('data', function (chunk) {
         body.push(chunk)
       })
-      res.on('end', function () { cb(JSON.parse(body.toString()), res) })
+      res.on('end', function () {
+        cb(JSON.parse(body.toString()), res)
+      })
     })
     req.on('error', function (err) {
       t.error(err)

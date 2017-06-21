@@ -27,8 +27,23 @@ function resource (app, stack) {
     }
     function dispatch (req, res, ctx) {
       model.dispatch(req, Object.assign({ valueEncoding: 'json' }, ctx.params), function (err, data) {
-        if (err) throw err
-        ctx.send(200, JSON.stringify(data), { 'content-type': 'json' })
+        if (err) {
+          if (err.notFound) {
+            ctx.send(404, { message: 'resource not found' })
+          } else {
+            ctx.send(500, { message: 'internal server error' })
+          }
+        } else {
+          if (!data) {
+            if (req.method !== 'DELETE') {
+              ctx.send(404, { message: 'resource not found' })
+            } else {
+              ctx.send(200, { id: ctx.params.id }, { 'content-type': 'json' })
+            }
+          } else {
+            ctx.send(200, JSON.stringify(data), { 'content-type': 'json' })
+          }
+        }
       })
     }
   }
