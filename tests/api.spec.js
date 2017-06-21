@@ -74,6 +74,17 @@ tape('/api/v1/post', function (t) {
     })
   })
 
+  t.test('middleware can cancel request', function (assert) {
+    console.error('before request')
+    makeRequest('GET', '/api/v1/post/fake', null, function (body, res) {
+      console.error('after request')
+      assert.equal(res.statusCode, 500)
+      assert.equal(body.message, 'What are you doing?')
+      server.close()
+      t.end()
+    })
+  })
+
   function makeRequest (method, route, data, cb) {
     var req = http.request({ port: 8080, method: method, path: route, headers: {'Content-Type': 'application/json'} }, function (res) {
       res.on('error', function (err) {
@@ -84,7 +95,8 @@ tape('/api/v1/post', function (t) {
         body.push(chunk)
       })
       res.on('end', function () {
-        cb(JSON.parse(body.toString()), res)
+        var bodyString = body.toString()
+        cb(bodyString ? JSON.parse(bodyString) : '{}', res)
       })
     })
     req.on('error', function (err) {

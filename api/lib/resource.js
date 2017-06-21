@@ -15,11 +15,21 @@ function resource (app, stack) {
 
     function handler (req, res, ctx) {
       if (stack && stack._middleware.length > 0) {
-        ctx.req = req
-        ctx.res = res
-        stack.walk(ctx, function (err, data, next) {
+        ctx.ondone = function (err) {
           if (err) throw err
-          dispatch(req, res, ctx)
+        }
+        stack.walk(ctx, function (err, data) {
+          if (err) {
+            if (err.code && err.message) {
+              ctx.send(err.code, { message: err.message })
+            } else if (err instanceof Error) {
+              ctx.send(500, { message: err.message })
+            } else {
+              ctx.send(500, { message: 'Unknown error' })
+            }
+          } else {
+            dispatch(req, res, ctx)
+          }
         })
       } else {
         dispatch(req, res, ctx)

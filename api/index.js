@@ -8,15 +8,12 @@ var app = merry()
 var stack = Nanostack()
 // push to middleware
 stack.push(function timeElapsed (ctx, next) {
-  var start = Date.now()
-
-  next(null, function (err, ctx, next) {
-    if (err) return next(err)
-    var now = Date.now()
-    var elapsed = start - now
-    console.log('time elapsed: ' + elapsed + 'ms')
+  if (ctx.req.method === 'GET' && ctx.params.id === 'fake') {
+    console.error('fake request')
+    next({ code: 500, message: 'What are you doing?' })
+  } else {
     next()
-  })
+  }
 })
 var resource = Resource(app, stack)
 var db = process.env.ENV !== 'production'
