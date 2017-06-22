@@ -28,7 +28,7 @@ $ savior full-stack <your-app-name>
 - [ ] Make some examples
 - [ ] Add more tests
   - [x] Full REST api tests
-  - [ ] Middleware tests for api
+  - [x] Middleware tests for api
   - [ ] Method and route overwrite test
   - [ ] Client tests
 - [x] Add ci through travis

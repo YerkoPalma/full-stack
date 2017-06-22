@@ -9,8 +9,16 @@ var stack = Nanostack()
 // push to middleware
 stack.push(function timeElapsed (ctx, next) {
   if (ctx.req.method === 'GET' && ctx.params.id === 'fake') {
-    console.error('fake request')
-    next({ code: 500, message: 'What are you doing?' })
+    next(null, function (err, val, next) {
+      if (err) console.error(err)
+      next({ code: 500, message: 'What are you doing?' })
+    })
+  } else if (ctx.req.method === 'GET' && !ctx.params.id) {
+    next(null, function (err, val, next) {
+      if (err) console.error(err)
+      ctx.res.setHeader('awesome-header', 'Header set')
+      next()
+    })
   } else {
     next()
   }
@@ -27,7 +35,7 @@ var opt = {
 resource(Post, opt)
 
 app.route('default', function (req, res, ctx) {
-  ctx.send(404, { message: 'nada butts here' })
+  ctx.send(404, { message: 'not found' })
 })
 
 module.exports = app

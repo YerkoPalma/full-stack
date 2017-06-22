@@ -22,11 +22,12 @@ tape('/api/v1/post', function (t) {
     })
   })
 
-  t.test('GET', function (assert) {
-    assert.plan(1)
+  t.test('GET and middleware', function (assert) {
+    assert.plan(2)
 
     makeRequest('GET', '/api/v1/post', null, function (body, res) {
       assert.equal(res.statusCode, 200)
+      assert.equal(res.headers['awesome-header'], 'Header set')
     })
   })
 
@@ -75,12 +76,9 @@ tape('/api/v1/post', function (t) {
   })
 
   t.test('middleware can cancel request', function (assert) {
-    console.error('before request')
     makeRequest('GET', '/api/v1/post/fake', null, function (body, res) {
-      console.error('after request')
       assert.equal(res.statusCode, 500)
       assert.equal(body.message, 'What are you doing?')
-      server.close()
       t.end()
     })
   })
