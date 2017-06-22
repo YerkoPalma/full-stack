@@ -9,11 +9,14 @@ function resource (app, stack) {
     // show, update, delete
     app.route(['GET', 'PUT', 'DELETE'], path.join(prefix, route, '/:id'), handler)
 
-    if (opt.overwrite) {
-      app.route(opt.overwrite.method, opt.overwrite.route, opt.overwrite.handler)
+    if (opt.overwrite && Array.isArray(opt.overwrite)) {
+      opt.overwrite.map(function (overwrite) {
+        app.route(overwrite.method, overwrite.route, overwrite.handler)
+      })
     }
 
     function handler (req, res, ctx) {
+      var dispatcher = dispatch(model)
       if (stack && stack._middleware.length > 0) {
         ctx.ondone = function (err) {
           if (err) throw err
@@ -28,34 +31,37 @@ function resource (app, stack) {
               ctx.send(500, { message: 'Unknown error' })
             }
           } else {
-            dispatch(req, res, ctx)
+            dispatcher(req, res, ctx)
           }
         })
       } else {
-        dispatch(req, res, ctx)
+        dispatcher(req, res, ctx)
       }
-    }
-    function dispatch (req, res, ctx) {
-      model.dispatch(req, Object.assign({ valueEncoding: 'json' }, ctx.params), function (err, data) {
-        if (err) {
-          if (err.notFound) {
-            ctx.send(404, { message: 'resource not found' })
-          } else {
-            ctx.send(500, { message: 'internal server error' })
-          }
-        } else {
-          if (!data) {
-            if (req.method !== 'DELETE') {
-              ctx.send(404, { message: 'resource not found' })
-            } else {
-              ctx.send(200, { id: ctx.params.id }, { 'content-type': 'json' })
-            }
-          } else {
-            ctx.send(200, JSON.stringify(data), { 'content-type': 'json' })
-          }
-        }
-      })
     }
   }
 }
+function dispatch (model) {
+  return function (req, res, ctx) {
+    model.dispatch(req, Object.assign({ valueEncoding: 'json' }, ctx.params), function (err, data) {
+      if (err) {
+        if (err.notFound) {
+          ctx.send(404, { message: 'resource not found' })
+        } else {
+          ctx.send(500, { message: 'internal server error' })
+        }
+      } else {
+        if (!data) {
+          if (req.method !== 'DELETE') {
+            ctx.send(404, { message: 'resource not found' })
+          } else {
+            ctx.send(200, { id: ctx.params.id }, { 'content-type': 'json' })
+          }
+        } else {
+          ctx.send(200, JSON.stringify(data), { 'content-type': 'json' })
+        }
+      }
+    })
+  }
+}
 module.exports = resource
+module.exports.dispatch = dispatch

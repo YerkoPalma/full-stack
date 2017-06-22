@@ -75,6 +75,10 @@ tape('/api/v1/post', function (t) {
     })
   })
 
+  t.test('overwrite', function (assert) {
+    assert.end()
+  })
+
   t.test('middleware can cancel request', function (assert) {
     makeRequest('GET', '/api/v1/post/fake', null, function (body, res) {
       assert.equal(res.statusCode, 500)

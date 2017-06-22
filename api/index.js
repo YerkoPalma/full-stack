@@ -1,6 +1,7 @@
 var merry = require('merry')
 var level = require('level')
 var Resource = require('./lib/resource')
+var Dispatch = require('./lib/resource').dispatch
 var Model = require('./lib/factory')
 var Nanostack = require('nanostack')
 
@@ -24,12 +25,19 @@ stack.push(function timeElapsed (ctx, next) {
   }
 })
 var resource = Resource(app, stack)
+
 var db = process.env.ENV !== 'production'
         ? require('memdb')() : level(process.env.DB)
 var Post = Model(db, 'post')
+var dispatch = Dispatch(Post)
 var opt = {
   version: 1,
-  path: 'post'
+  path: 'post',
+  overwrite: [{
+    method: 'POST',
+    route: '/api/v1/post',
+    handler: dispatch
+  }]
 }
 
 resource(Post, opt)
