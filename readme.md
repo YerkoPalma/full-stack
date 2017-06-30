@@ -1,5 +1,4 @@
 # full-stack
-[![Build Status](https://img.shields.io/travis/YerkoPalma/full-stack/master.svg?style=flat-square)](https://travis-ci.org/YerkoPalma/full-stack) [![test coverage](https://img.shields.io/codecov/c/github/YerkoPalma/full-stack/master.svg?style=flat-square)](https://codecov.io/github/YerkoPalma/full-stack) [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat-square)](https://github.com/feross/standard)
 
 > full-stack project template
 
@@ -179,7 +178,7 @@ make an html stream and pipe it to the response stream.
 
 ## Example
 
-The example provided is a simple blog.
+In the example folder, there are some sub projects with their own description.
 
 ## License
 
