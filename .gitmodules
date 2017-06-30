@@ -1,0 +1,3 @@
+[submodule "examples/auth-example"]
+	path = examples/auth-example
+	url = https://github.com/YerkoPalma/auth-example.git
