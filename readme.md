@@ -21,18 +21,6 @@ path where you cloned the templates. After that, run:
 $ savior full-stack <your-app-name>
 ```
 
-## TODO
-
-- [x] Finish `production` cycle
-- [ ] Pass req, and res to ctx in Resource file, to use those in middlewares
-- [ ] Make some examples
-- [ ] Add more tests
-  - [x] Full REST api tests
-  - [x] Middleware tests for api
-  - [ ] Method and route overwrite test
-  - [ ] Client tests
-- [x] Add ci through travis
-
 ## How it works
 
 There are two main frames in this stack, the client (frontend) and the api 
@@ -149,7 +137,7 @@ to build your frontend, then run your app with the `ENV` variable set to
 
 ### Do you use components?
 
-Components doen't get included here. If you want components, you should use 
+Components doesn't get included here. If you want components, you should use 
 [microcomponent][microcomponent] library.
 
 ### And server side rendering?
