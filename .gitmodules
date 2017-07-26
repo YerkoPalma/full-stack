@@ -4,3 +4,6 @@
 [submodule "examples/simple-example"]
 	path = examples/simple-example
 	url = https://github.com/YerkoPalma/simple-example.git
+[submodule "examples/choo-example"]
+	path = examples/choo-example
+	url = https://github.com/YerkoPalma/choo-example
